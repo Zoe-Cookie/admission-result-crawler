@@ -1,0 +1,14 @@
+{
+  "urls": [
+    "https://example.com/admissions"
+  ],
+  "keywords": [
+    "榜單",
+    "放榜",
+    "admission",
+    "result",
+    "錄取",
+    "名單"
+  ],
+  "check_interval": 1200
+}

@@ -1,0 +1,51 @@
+name: Check Admission Results
+
+on:
+  schedule:
+    # Run every 20 minutes
+    - cron: '*/20 * * * *'
+  workflow_dispatch:  # Allow manual triggering
+  push:
+    branches:
+      - main
+    paths:
+      - 'crawler.py'
+      - 'config.json'
+      - '.github/workflows/check-results.yml'
+
+jobs:
+  check-results:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+        cache: 'pip'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    
+    - name: Run crawler
+      env:
+        TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+        TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+      run: |
+        python crawler.py
+    
+    - name: Upload results as artifact
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: crawler-results-${{ github.run_number }}
+        path: |
+          *.log
+          *.json
+        retention-days: 7
+        if-no-files-found: ignore
