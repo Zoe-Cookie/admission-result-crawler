@@ -98,14 +98,14 @@ class AdmissionCrawler:
         relevant_links = []
         
         for link in soup.find_all('a', href=True):
-            link_text = link.get_text().strip()
-            link_href = link.get('href', '')
+            link_text = link.get_text().strip().lower()
+            link_href = link.get('href', '').lower()
             
             for keyword in keywords:
-                if keyword in link_text or keyword in link_href:
+                if keyword.lower() in link_text or keyword.lower() in link_href:
                     relevant_links.append({
-                        'text': link_text,
-                        'url': link_href
+                        'text': link.get_text().strip(),
+                        'url': link.get('href', '')
                     })
                     break
         

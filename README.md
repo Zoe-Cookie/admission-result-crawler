@@ -94,7 +94,7 @@ admission-result-crawler/
 - GitHub Actions 的免費方案有使用限制，請注意使用量
 - 確保監控的網站允許爬蟲訪問
 - 建議設定合理的檢查頻率，避免對目標網站造成負擔
-- 關鍵字區分大小寫，可依需求調整
+- 關鍵字搜尋不區分大小寫 (Case-insensitive keyword matching)
 
 ## 授權 (License)
 
