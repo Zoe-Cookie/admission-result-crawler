@@ -38,6 +38,18 @@ A Python web crawler that monitors graduate school admission announcements and s
     "https://example.com/admissions",
     "https://school.edu.tw/admission-results"
   ],
+  "targets": [
+    {
+      "url": "https://dynamic.example.com/admissions",
+      "fetcher": "selenium",
+      "wait_selector": ".result-list",
+      "parser": {
+        "type": "css_text_contains",
+        "selector": ".result-list",
+        "keywords": ["榜單", "錄取名單"]
+      }
+    }
+  ],
   "keywords": [
     "榜單",
     "放榜",
@@ -49,6 +61,12 @@ A Python web crawler that monitors graduate school admission announcements and s
   "check_interval": 1200
 }
 ```
+
+說明:
+- `targets` 可針對特定網址指定不同抓取方式與解析規則。
+- 若 `targets` 沒有涵蓋的網址，仍會使用 `urls` + 全域 `keywords` 進行檢查。
+- `fetcher` 支援 `requests` 或 `selenium`。
+- `parser.type` 常用選項: `keyword`、`css_text_contains`、`css_exists`、`table_text_contains`、`link_text_regex`、`link_text_contains`。
 
 ### 4. 啟用 GitHub Actions
 
