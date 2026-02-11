@@ -39,7 +39,7 @@ class AdmissionCrawler:
             "check_interval": 1200,  # 20 minutes in seconds
         }
     
-    def fetch_page_requests(self, url):
+    def fetch_page_requests(self, url, verify_ssl=True):
         """
         Fetch webpage content.
         
@@ -53,7 +53,20 @@ class AdmissionCrawler:
             headers = {
                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
             }
-            response = requests.get(url, headers=headers, timeout=30)
+            if not verify_ssl:
+                try:
+                    from urllib3.exceptions import InsecureRequestWarning
+                    import urllib3
+                    urllib3.disable_warnings(InsecureRequestWarning)
+                except Exception:
+                    pass
+
+            response = requests.get(
+                url,
+                headers=headers,
+                timeout=30,
+                verify=verify_ssl
+            )
             response.raise_for_status()
             response.encoding = response.apparent_encoding
             return BeautifulSoup(response.text, 'html.parser')
@@ -103,6 +116,12 @@ class AdmissionCrawler:
         try:
             driver = webdriver.Chrome(options=options)
             driver.get(url)
+            
+            # Give dynamic content time to load if no wait_selector specified
+            if not wait_selector and not click_text and not click_text_contains:
+                import time
+                time.sleep(3)
+            
             if click_text:
                 text_xpath = f"//*[normalize-space()='{click_text}']"
                 WebDriverWait(driver, wait_timeout).until(
@@ -351,7 +370,8 @@ class AdmissionCrawler:
                 click_text_contains=click_text_contains
             )
         else:
-            soup = self.fetch_page_requests(url)
+            verify_ssl = target.get('verify_ssl', True)
+            soup = self.fetch_page_requests(url, verify_ssl=verify_ssl)
         
         if not soup:
             return {

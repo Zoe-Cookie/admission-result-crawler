@@ -1,22 +1,49 @@
 {
   "urls": [
-    "https://www.aca.ntu.edu.tw/w/aca/A02",
-    "https://www.csie.ntu.edu.tw/zh_tw/Announcements/Admission_News?page_no=1&",
     "https://www.cs.nycu.edu.tw/announcements/candidate?page=1",
-    "https://adms.site.nthu.edu.tw/p/403-1207-323-1.php?Lang=zh-tw",
-    "https://dcs.site.nthu.edu.tw/p/404-1174-162488.php",
     "https://adms-acad.ncku.edu.tw/p/406-1044-227148,r3265.php?Lang=zh-tw"
   ],
   "keywords": [
     "115學年度碩士班招生第1梯次放榜",
     "【研究所】115學年度碩士班入學考正備取名單",
-    "115學年度碩士班考試入學報到注意事項(含榜單連結)",
     "115學年度碩士班入學考試 初試合格暨錄取名單公告",
-    "【115學年度碩士班考試入學】",
+    "115學年度碩士班考試入學報到注意事項",
     "榜單查詢"
   ],
   "check_interval": 1200,
   "targets": [
+    {
+      "url": "https://www.aca.ntu.edu.tw/w/aca/A02",
+      "fetcher": "requests",
+      "verify_ssl": false,
+      "parser": {
+        "type": "keyword"
+      }
+    },
+    {
+      "url": "https://www.csie.ntu.edu.tw/zh_tw/Announcements/Admission_News?page_no=1&",
+      "fetcher": "requests",
+      "verify_ssl": false,
+      "parser": {
+        "type": "keyword"
+      }
+    },
+    {
+      "url": "https://adms.site.nthu.edu.tw/p/403-1207-323-1.php?Lang=zh-tw",
+      "fetcher": "requests",
+      "verify_ssl": false,
+      "parser": {
+        "type": "keyword"
+      }
+    },
+    {
+      "url": "https://dcs.site.nthu.edu.tw/p/404-1174-162488.php",
+      "fetcher": "selenium",
+      "parser": {
+        "type": "link_text_contains",
+        "keywords": ["【115學年度碩士班考試入學】"]
+      }
+    },
     {
       "url": "https://www.aca.ntu.edu.tw/w/aca/LocalAdmissionClass_21072014071675661",
       "fetcher": "selenium",
@@ -24,7 +51,7 @@
       "wait_selector": ".card-text-info",
       "parser": {
         "type": "css_exists",
-        "selector": ".card-text-info a#115碩士班招生第1梯次錄取名單"
+        "selector": ".card-text-info a[id='115碩士班招生第1梯次錄取名單']"
       }
     },
     {
@@ -34,8 +61,8 @@
       "wait_selector": "#tab-exam",
       "parser": {
         "type": "css_text_contains",
-        "selector": "#tab-exam .list-group-item.text-start:first-child",
-        "keywords": ["榜單查詢"]
+        "selector": "#tab-exam .list-group-item.text-start:nth-child(1)",
+        "keywords": ["第一梯次榜單"]
       }
     }
   ]

@@ -30,6 +30,16 @@ jobs:
         python-version: '3.11'
         cache: 'pip'
     
+    - name: Setup Chrome
+      uses: browser-actions/setup-chrome@v1
+      with:
+        chrome-version: stable
+    
+    - name: Verify Chrome installation
+      run: |
+        chrome --version
+        which chrome
+    
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
