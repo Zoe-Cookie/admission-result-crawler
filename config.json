@@ -1,14 +1,25 @@
 {
   "urls": [
-    "https://example.com/admissions"
+    "https://www.aca.ntu.edu.tw/w/aca/LocalAdmissionClass_21072014071675661",
+    "https://www.aca.ntu.edu.tw/w/aca/A02",
+    "https://www.csie.ntu.edu.tw/zh_tw/Announcements/Admission_News?page_no=1&",
+    "https://www.cs.nycu.edu.tw/announcements/candidate?page=1",
+    "https://exam.nycu.edu.tw/ma-me.php",
+    "https://adms.site.nthu.edu.tw/p/403-1207-323-1.php?Lang=zh-tw",
+    "https://dcs.site.nthu.edu.tw/p/404-1174-162488.php",
+    "https://adms-acad.ncku.edu.tw/p/406-1044-227148,r3265.php?Lang=zh-tw"
   ],
   "keywords": [
     "榜單",
-    "放榜",
-    "admission",
-    "result",
-    "錄取",
-    "名單"
+    "錄取名單",
+    "正備取名單",
+    "115碩士班招生第1梯次錄取名單",
+    "115學年度碩士班招生第1梯次放榜",
+    "【研究所】115學年度碩士班入學考正備取名單",
+    "115學年度碩士班考試入學報到注意事項(含榜單連結)",
+    "榜單查詢",
+    "115學年度碩士班入學考試 初試合格暨錄取名單公告",
+    "【115學年度碩士班考試入學】"
   ],
   "check_interval": 1200
 }
