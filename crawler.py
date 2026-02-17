@@ -27,6 +27,8 @@ class AdmissionCrawler:
         self.config = self.load_config(config_path)
         self.telegram_token = os.environ.get('TELEGRAM_BOT_TOKEN', '')
         self.telegram_chat_id = os.environ.get('TELEGRAM_CHAT_ID', '')
+        self.notified_store = self.config.get('notified_store', 'notified_links.json')
+        self.notified_links = self.load_notified(self.notified_store)
         
     def load_config(self, config_path):
         """Load configuration from JSON file."""
@@ -38,6 +40,50 @@ class AdmissionCrawler:
             "keywords": [],
             "check_interval": 1200,  # 20 minutes in seconds
         }
+
+    def load_notified(self, store_path):
+        """Load notified link records from JSON file."""
+        if not store_path:
+            return set()
+        if not os.path.exists(store_path):
+            return set()
+        try:
+            with open(store_path, 'r', encoding='utf-8') as f:
+                data = json.load(f)
+            if isinstance(data, list):
+                return {str(item) for item in data if item}
+        except (OSError, ValueError) as e:
+            print(f"Error loading notified store {store_path}: {e}")
+        return set()
+
+    def save_notified(self):
+        """Persist notified link records to JSON file."""
+        if not self.notified_store:
+            return
+        try:
+            with open(self.notified_store, 'w', encoding='utf-8') as f:
+                json.dump(sorted(self.notified_links), f, ensure_ascii=False, indent=2)
+        except OSError as e:
+            print(f"Error saving notified store {self.notified_store}: {e}")
+
+    def notification_key_for_link(self, link):
+        """Build a stable key for a link notification record."""
+        if not link:
+            return None
+        link_url = (link.get('url') or '').strip()
+        if link_url:
+            return link_url
+        link_text = (link.get('text') or '').strip()
+        if link_text:
+            return f"text:{link_text}"
+        return None
+
+    def notification_key_for_page(self, url):
+        """Build a stable key for a page-level notification record."""
+        page_url = (url or '').strip()
+        if page_url:
+            return f"page:{page_url}"
+        return None
     
     def fetch_page_requests(self, url, verify_ssl=True):
         """
@@ -407,16 +453,42 @@ class AdmissionCrawler:
             
             if result.get('found'):
                 found_any = True
+                links = result.get('links') or []
+                new_links = []
+                new_link_keys = []
+                for link in links:
+                    key = self.notification_key_for_link(link)
+                    if not key or key in self.notified_links:
+                        continue
+                    new_links.append(link)
+                    new_link_keys.append(key)
+
+                page_key = None
+                if not links:
+                    page_key = self.notification_key_for_page(result.get('url'))
+                    if page_key and page_key in self.notified_links:
+                        print(f"Skipping duplicate notification for {result['url']}")
+                        continue
+
+                if links and not new_links:
+                    print(f"Skipping duplicate notifications for {result['url']}")
+                    continue
+
                 message = f"🎓 <b>Admission Information Found!</b>\n\n"
                 message += f"URL: {result['url']}\n"
                 message += f"Time: {result['checked_at']}\n"
-                
-                if result.get('links'):
+
+                if links:
                     message += f"\n<b>Related Links:</b>\n"
-                    for link in result['links'][:5]:  # Limit to 5 links
+                    for link in new_links[:5]:  # Limit to 5 links
                         message += f"• {link['text']}: {link['url']}\n"
-                
-                self.send_telegram_notification(message)
+
+                if self.send_telegram_notification(message):
+                    if links:
+                        self.notified_links.update(new_link_keys)
+                    elif page_key:
+                        self.notified_links.add(page_key)
+                    self.save_notified()
         
         # Print summary
         print("\n" + "="*50)
