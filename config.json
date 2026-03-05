@@ -5,7 +5,6 @@
   "keywords": [
     "115學年度碩士班招生第1梯次放榜",
     "【研究所】115學年度碩士班入學考正備取名單",
-    "115學年度碩士班入學考試 初試合格暨錄取名單公告",
     "115學年度碩士班考試入學報到注意事項"
   ],
   "check_interval": 1200,
@@ -24,22 +23,6 @@
       "verify_ssl": false,
       "parser": {
         "type": "keyword"
-      }
-    },
-    {
-      "url": "https://adms.site.nthu.edu.tw/p/403-1207-323-1.php?Lang=zh-tw",
-      "fetcher": "requests",
-      "verify_ssl": false,
-      "parser": {
-        "type": "keyword"
-      }
-    },
-    {
-      "url": "https://dcs.site.nthu.edu.tw/p/404-1174-162488.php",
-      "fetcher": "selenium",
-      "parser": {
-        "type": "link_text_contains",
-        "keywords": ["【115學年度碩士班考試入學】"]
       }
     },
     {
