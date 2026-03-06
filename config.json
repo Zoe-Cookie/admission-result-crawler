@@ -1,11 +1,9 @@
 {
-  "urls": [
-    "https://www.cs.nycu.edu.tw/announcements/candidate?page=1"
+  "urls": ［
   ],
   "keywords": [
     "115學年度碩士班招生第1梯次放榜",
     "【研究所】115學年度碩士班入學考正備取名單",
-    "115學年度碩士班考試入學報到注意事項"
   ],
   "check_interval": 1200,
   "targets": [
@@ -33,17 +31,6 @@
       "parser": {
         "type": "css_exists",
         "selector": ".card-text-info a[id='115碩士班招生第1梯次錄取名單']"
-      }
-    },
-    {
-      "url": "https://exam.nycu.edu.tw/ma-me.php",
-      "fetcher": "selenium",
-      "click_text_contains": "簡章/統計表/榜單",
-      "wait_selector": "#tab-exam",
-      "parser": {
-        "type": "css_text_contains",
-        "selector": "#tab-exam .list-group-item.text-start:nth-child(1)",
-        "keywords": ["第一梯次榜單"]
       }
     }
   ]
